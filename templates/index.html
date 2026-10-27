@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Neurolucida Vessel Mesh Exporter</title>
+    <style>
+      :root { color-scheme: light; font-family: system-ui, sans-serif; color: #17212b; background: #f3f6f8; }
+      body { margin: 0; padding: 3rem 1rem; }
+      main { max-width: 700px; margin: auto; padding: 2rem; background: white; border: 1px solid #dce3e8; border-radius: 12px; }
+      h1 { margin-top: 0; font-size: 1.65rem; }
+      p { line-height: 1.55; }
+      form { display: grid; gap: 1rem; margin-top: 1.5rem; }
+      label { font-weight: 600; }
+      input, select, button { font: inherit; }
+      input[type=file], select { display: block; width: 100%; margin-top: .45rem; padding: .65rem; border: 1px solid #aebbc4; border-radius: 6px; background: white; }
+      button { justify-self: start; padding: .7rem 1rem; color: white; background: #126b57; border: 0; border-radius: 6px; cursor: pointer; }
+      button:hover { background: #0e5747; }
+      .error { padding: .8rem 1rem; color: #7a1d1d; background: #fff0ef; border-left: 4px solid #c33; }
+      .note { color: #4a5b66; font-size: .94rem; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>Neurolucida Vessel Mesh Exporter</h1>
+      <p>Upload a Neurolucida XML tracing to create a tube mesh from vessel centerlines and diameters. Vessel colors are preserved as OBJ materials.</p>
+      {% if error %}<p class="error" role="alert">{{ error }}</p>{% endif %}
+      <form method="post" action="{{ url_for('convert') }}" enctype="multipart/form-data">
+        <label for="xml_file">Neurolucida XML file
+          <input id="xml_file" name="xml_file" type="file" accept=".xml,application/xml,text/xml" required>
+        </label>
+        <label for="radial_segments">Tube smoothness
+          <select id="radial_segments" name="radial_segments">
+            <option value="6">6 segments (smaller file)</option>
+            <option value="8" selected>8 segments (recommended)</option>
+            <option value="12">12 segments (smoother)</option>
+            <option value="16">16 segments (smoothest)</option>
+          </select>
+        </label>
+        <button type="submit">Convert and download</button>
+      </form>
+      <p class="note">The download is a ZIP containing the .obj mesh and its required .mtl color-material file. Keep both together when importing. Coordinates and diameters are used as recorded in the XML.</p>
+    </main>
+  </body>
+</html>
